@@ -12,12 +12,12 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database import get_db_connection
 
 EXTERNAL_PRODUCTS_API_URL = "http://127.0.0.1:8001/is_products/products/details/" 
-AUTH_SERVICE_ME_URL = "http://localhost:4000/auth/users/me"
-BLOCKCHAIN_LOG_URL = os.getenv("BLOCKCHAIN_LOG_URL", "http://localhost:9005/blockchain/log")
+AUTH_SERVICE_ME_URL = "https://authservices-npr8.onrender.com/auth/users/me"
+BLOCKCHAIN_LOG_URL = os.getenv("BLOCKCHAIN_LOG_URL", "https://blockchainservices.onrender.com/blockchain/log")
 
 router = APIRouter() 
 promotions_router = APIRouter(prefix="/promotions", tags=["Promotions"])
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="http://localhost:4000/auth/token")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="https://authservices-npr8.onrender.com/auth/token")
 
 # AUTHORIZATION HELPER
 async def validate_token_and_roles(token: str, allowed_roles: List[str]):
