@@ -7,7 +7,7 @@ import os
 # Import the router from the discount file
 from routers.discount import router as discount_router
 # Import the router from the promotion file
-from routers.promotion import router as promotion_router
+from routers.promotions import router as promotion_router
 
 app = FastAPI(
     title="Discount and Promotion Service API",
