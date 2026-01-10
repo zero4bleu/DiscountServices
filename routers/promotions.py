@@ -11,7 +11,7 @@ import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from database import get_db_connection
 
-EXTERNAL_PRODUCTS_API_URL = "http://127.0.0.1:8001/is_products/products/details/" 
+EXTERNAL_PRODUCTS_API_URL = "https://ims-productservices.onrender.com/is_products/products/details/" 
 AUTH_SERVICE_ME_URL = "https://authservices-npr8.onrender.com/auth/users/me"
 BLOCKCHAIN_LOG_URL = os.getenv("BLOCKCHAIN_LOG_URL", "https://blockchainservices.onrender.com/blockchain/log")
 
