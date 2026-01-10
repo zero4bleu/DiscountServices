@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Log In</title>
+    <style>
+        @font-face {
+            font-family: 'Century Gothic';
+            src: local('Century Gothic'), url('https://fonts.cdnfonts.com/s/17530/CenturyGothic.woff') format('woff');
+        }
+
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            font-family: 'Century Gothic', Arial, sans-serif; /* Updated to Century Gothic */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            /* background-image: url('LOG_IN.png');  */
+            background-size: cover;
+            background-position: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            position: absolute;
+            right: 195px;
+            top: calc(50% + 40px); /* Moves the container down by 70px */
+            transform: translateY(-50%);
+        }
+
+        .container label {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: #5a4036; 
+            font-weight: bold;
+        }
+
+        .container input {
+            width: 300px;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px; 
+            font-size: 16px;
+            background-color: #f0f0f0; 
+            color: #5a4036; 
+            font-family: 'Century Gothic', Arial, sans-serif; /* Ensures Century Gothic for inputs */
+        }
+
+        .container input:focus {
+            outline: none;
+            border-color: #a0524d; 
+        }
+
+        .container .start-btn {
+            background-color: #800020; 
+            padding: 15px 50px;
+            font-size: 16px;
+            color: white; 
+            border: none;
+            border-radius: 20px; 
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Century Gothic', Arial, sans-serif; /* Ensures Century Gothic for the button */
+            margin-left: 75px; /* Moves the button to the right */
+        }
+
+        .container .start-btn:hover {
+            background-color: #6a0019; 
+        }
+
+        .container .start-btn i {
+            margin-right: 8px; /* Adjust if you decide to add an icon */
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter your name">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter your password">
+        <br>
+        <!-- <button class="start-btn" onclick="window.location.href='catalog.html'"> -->
+        <button class="start-btn">
+             🔒 Log In
+        </button>
+    </div>
+</body>
+
+<script>
+    document.querySelector('.start-btn').addEventListener('click', async (event) => {
+        event.preventDefault(); // Prevent form submission
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+
+        try {
+            const response = await fetch('http://127.0.0.1:8000/auth/token', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: new URLSearchParams({
+                    'username': username,
+                    'password': password,
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log('Login successful:', data);
+
+                // Save the token to localStorage
+                localStorage.setItem('access_token', data.access_token);
+
+                // Decode the JWT token to get the user role
+                const payloadBase64 = data.access_token.split('.')[1];
+                const decodedPayload = JSON.parse(atob(payloadBase64));
+                const userRole = decodedPayload.role;
+
+                // Redirect based on the user role
+                if (userRole === 'admin') {
+                    window.location.href = 'admin_dashboard.html';
+                } else if (userRole === 'employee') {
+                    window.location.href = 'employee_dashboard.html';
+                } else {
+                    alert('Unknown user role. Please contact support.');
+                }
+            } else {
+                const errorData = await response.json();
+                alert(`Login failed: ${errorData.detail}`);
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert('An error occurred while logging in.');
+        }
+    });
+</script>
+
+
+</html>
