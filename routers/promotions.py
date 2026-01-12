@@ -143,12 +143,13 @@ class PromotionListOut(BaseModel):
     validTo: str
     status: str
     bogoProducts: Optional[List[BogoProductInfo]] = None
-    buyQuantity: Optional[int] = None  # ✅ ADD THIS
-    getQuantity: Optional[int] = None  # ✅ ADD THIS
-    bogoDiscountType: Optional[str] = None  # ✅ ADD THIS
-    bogoDiscountValue: Optional[Decimal] = None  # ✅ ADD THIS
-    bogoPromotionImage: Optional[str] = None  # ✅ ADD THIS
-    description: Optional[str] = None  # ✅ ADD THIS
+    buyQuantity: Optional[int] = None  
+    getQuantity: Optional[int] = None  
+    bogoDiscountType: Optional[str] = None  
+    bogoDiscountValue: Optional[Decimal] = None 
+    bogoPromotionImage: Optional[str] = None  
+    description: Optional[str] = None 
+    minQuantity: Optional[int] = None
 
 # HELPER FUNCTION FOR EXTERNAL DATA 
 async def get_external_choices(token: str):
@@ -256,7 +257,7 @@ async def get_all_promotions(token: str = Depends(oauth2_scheme)):
             sql = """
                 SELECT 
                     p.id, p.name, p.application_type, p.promotion_type, p.promotion_value, p.buy_quantity, 
-                    p.get_quantity, p.bogo_discount_type, p.bogo_discount_value, p.valid_from, 
+                    p.get_quantity, p.bogo_discount_type, p.bogo_discount_value, p.valid_from,  p.min_quantity,
                     p.valid_to, p.status,
                     (
                         STUFF((SELECT DISTINCT ', ' + pp.product_name
@@ -321,6 +322,7 @@ async def get_all_promotions(token: str = Depends(oauth2_scheme)):
                     validFrom=p.valid_from.strftime('%Y-%m-%d'),
                     validTo=p.valid_to.strftime('%Y-%m-%d'),
                     status=p.status,
+                    minQuantity=p.min_quantity,
                     bogoProducts=bogo_products_list
                 ))
             return results
@@ -342,7 +344,7 @@ async def get_bogo_promotions(token: str = Depends(oauth2_scheme)):
                 SELECT 
                     p.id, p.name, p.description, p.application_type, p.promotion_type, 
                     p.promotion_value, p.buy_quantity, p.get_quantity, p.bogo_discount_type, 
-                    p.bogo_discount_value, p.bogo_promotion_image, p.valid_from, 
+                    p.bogo_discount_value, p.bogo_promotion_image, p.min_quantity, p.valid_from, 
                     p.valid_to, p.status,
                     (
                         STUFF((SELECT DISTINCT ', ' + pp.product_name
@@ -397,6 +399,7 @@ async def get_bogo_promotions(token: str = Depends(oauth2_scheme)):
                     bogoDiscountValue=p.bogo_discount_value,  # ✅ ADD THIS
                     bogoPromotionImage=p.bogo_promotion_image,  # ✅ ADD THIS
                     description=p.description  # ✅ ADD THIS
+                    minQuantity=p.min_quantity
                 ))
             return results
     except Exception as e:
