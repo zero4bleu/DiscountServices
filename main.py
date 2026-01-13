@@ -19,13 +19,7 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "https://bleu-ims-beta.vercel.app",
-        "https://authservices-npr8.onrender.com",
-        "https://bleu-pos-tau.vercel.app",
-        "https://bleu-ums-zeta.vercel.app",
-        "https://sales-services.onrender.com",
-        "https://sessionservices.onrender.com",
-        "https://blockchainservices.onrender.com",  # Self
+        "*",  # Self
     ],
     allow_credentials=True,
     allow_methods=["*"],
