@@ -398,7 +398,7 @@ async def get_bogo_promotions(token: str = Depends(oauth2_scheme)):
                     bogoDiscountType=p.bogo_discount_type,  # ✅ ADD THIS
                     bogoDiscountValue=p.bogo_discount_value,  # ✅ ADD THIS
                     bogoPromotionImage=p.bogo_promotion_image,  # ✅ ADD THIS
-                    description=p.description  # ✅ ADD THIS
+                    description=p.description,  # ✅ ADD THIS
                     minQuantity=p.min_quantity
                 ))
             return results
@@ -413,7 +413,7 @@ async def get_active_promotions_public(token: str = Depends(oauth2_scheme)):
     PUBLIC endpoint for OOS and other services.
     Requires user authentication.
     """
-    await validate_token_and_roles(token, allowed_roles=["user"])
+    await validate_token_and_roles(token, allowed_roles=["user", "admin"])
     conn = await get_db_connection()
     try:
         await auto_expire_promotions(conn)
